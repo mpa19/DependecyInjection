@@ -11,8 +11,11 @@ public class Container implements Injector {
 
     private final Map<String, Relation<ObjectType, Object, Object>> services;
 
+    private static Map<String, Object> singleton;
+
     public Container() {
         this.services = new HashMap<>();
+        this.singleton = new HashMap<>();
     }
 
     @Override
@@ -24,14 +27,16 @@ public class Container implements Injector {
 
     @Override
     public void registerFactory(String name, Factory creator, String... parameters) throws DependencyException {
-        if(services.containsKey(name) || !services.containsKey(parameters[0])) /// DUDAAAAAAA
+        if(services.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
         services.put(name, new Relation<>(ObjectType.FACTORY, creator, parameters));
     }
 
     @Override
     public void registerSingleton(String name, Factory creator, String... parameters) throws DependencyException {
-
+        if(services.containsKey(name))
+            throw new DependencyException(new DependencyException("The key already exists in the map."));
+        services.put(name, new Relation<>(ObjectType.SINGLETON, creator, parameters));
     }
 
     @Override
@@ -54,6 +59,22 @@ public class Container implements Injector {
                 return ((Factory)value.getSecond()).create(params);
             case CONSTANT:
                 return value.getSecond();
+            case SINGLETON:
+                if(!singleton.containsKey(name)){
+                    String[] valuesS = (String[]) value.getThird();
+
+                    Object[] paramsS = new Object[valuesS.length];
+                    int contS = 0;
+
+                    for(String x : valuesS){
+                        paramsS[contS] = (int) this.getObject(x);
+                        contS++;
+                    }
+                    Object val = ((Factory)value.getSecond()).create(paramsS);
+                    singleton.put(name, val);
+                    return val;
+                }
+                return singleton.get(name);
         }
 
         throw new DependencyException(new DependencyException("The ObjectType was neither SERVICE nor CONSTANT."));
