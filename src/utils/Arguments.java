@@ -1,12 +1,12 @@
 package utils;
 
-public class Relation<A, B, C> {
+public class Arguments<A, B, C> {
     private final A type;
     private final B factoryVal;
     private final C dependencies;
 
 
-    public Relation(A type, B factoryVal, C third) {
+    public Arguments(A type, B factoryVal, C third) {
         this.type = type;
         this.factoryVal = factoryVal;
         this.dependencies = third;

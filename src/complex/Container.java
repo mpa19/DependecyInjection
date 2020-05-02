@@ -1,6 +1,6 @@
 package complex;
 
-import utils.Relation;
+import utils.Arguments;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ public class Container implements Injector {
 
     private enum ObjectType {CONSTANT, FACTORY, SINGLETON}
 
-    private final Map<Class, Relation> services;
+    private final Map<Class, Arguments> services;
 
     private static Map<Class, Object> singleton;
 
@@ -22,26 +22,26 @@ public class Container implements Injector {
     public <E> void registerConstant(Class<E> name, E value) throws DependencyException {
         if(services.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        services.put(name, new Relation<>(ObjectType.CONSTANT, value, null));
+        services.put(name, new Arguments<>(ObjectType.CONSTANT, value, null));
     }
 
     @Override
     public <E> void registerFactory(Class<E> name, Factory<? extends E> creator, Class<E>... parameters) throws DependencyException {
         if(services.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        services.put(name, new Relation<>(ObjectType.FACTORY, creator, parameters));
+        services.put(name, new Arguments<>(ObjectType.FACTORY, creator, parameters));
     }
 
     @Override
     public <E> void registerSingleton(Class<E> name, Factory<? extends E> creator, Class<E>... parameters) throws DependencyException {
         if(services.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        services.put(name, new Relation<>(ObjectType.SINGLETON, creator, parameters));
+        services.put(name, new Arguments<>(ObjectType.SINGLETON, creator, parameters));
     }
 
     @Override
     public <E> E getObject(Class<E> name) throws DependencyException {
-        Relation<ObjectType, Object, Object> value = services.get(name);
+        Arguments<ObjectType, Object, Object> value = services.get(name);
         if(value == null)
             throw new DependencyException(new DependencyException("The key was not found in the map."));
 
@@ -61,7 +61,7 @@ public class Container implements Injector {
         throw new DependencyException(new DependencyException("The ObjectType was neither SERVICE nor CONSTANT."));
     }
 
-    private Object[] funAux(Relation value) throws DependencyException {
+    private Object[] funAux(Arguments value) throws DependencyException {
         Class[] values = (Class[]) value.getDependencies();
 
         Object[] params = new Object[values.length];
