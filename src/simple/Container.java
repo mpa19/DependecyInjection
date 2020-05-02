@@ -9,7 +9,7 @@ public class Container implements Injector {
 
     private enum ObjectType {CONSTANT, FACTORY, SINGLETON}
 
-    private final Map<String, Relation<ObjectType, Object, Object>> services;
+    private final Map<String, Relation> services;
 
     private static Map<String, Object> singleton;
 
@@ -45,38 +45,32 @@ public class Container implements Injector {
         if(value == null)
             throw new DependencyException(new DependencyException("The key was not found in the map."));
 
-        switch(value.getFirst()) {
+        switch(value.getType()) {
             case FACTORY:
-                String[] values = (String[]) value.getThird();
-
-                Object[] params = new Object[values.length];
-                int cont = 0;
-
-                for(String x : values){
-                    params[cont] = (int) this.getObject(x);
-                    cont++;
-                }
-                return ((Factory)value.getSecond()).create(params);
+                return ((Factory)value.getFactoryVal()).create(funAux(value));
             case CONSTANT:
-                return value.getSecond();
+                return value.getFactoryVal();
             case SINGLETON:
                 if(!singleton.containsKey(name)){
-                    String[] valuesS = (String[]) value.getThird();
-
-                    Object[] paramsS = new Object[valuesS.length];
-                    int contS = 0;
-
-                    for(String x : valuesS){
-                        paramsS[contS] = (int) this.getObject(x);
-                        contS++;
-                    }
-                    Object val = ((Factory)value.getSecond()).create(paramsS);
+                    Object val = ((Factory)value.getFactoryVal()).create(funAux(value));
                     singleton.put(name, val);
                     return val;
                 }
                 return singleton.get(name);
         }
-
         throw new DependencyException(new DependencyException("The ObjectType was neither SERVICE nor CONSTANT."));
+    }
+
+    private Object[] funAux(Relation value) throws DependencyException {
+        String[] values = (String[]) value.getDependencies();
+
+        Object[] params = new Object[values.length];
+        int cont = 0;
+
+        for(String x : values){
+            params[cont] = this.getObject(x);
+            cont++;
+        }
+        return params;
     }
 }
