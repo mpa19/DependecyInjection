@@ -59,5 +59,7 @@ public class ContainerTest {
         assertThat(d12, instanceOf(ImplementationD1.class));
         ImplementationD1 d11 = (ImplementationD1) d12;
         assertThat(d11.getI(), is(42));
+
+
     }
 }
