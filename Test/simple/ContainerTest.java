@@ -18,6 +18,8 @@ import simple.interfaces.InterfaceD;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class ContainerTest {
@@ -81,25 +83,27 @@ public class ContainerTest {
 
     }
 
-    @Test(expected = DependencyException.class)
+    @Test
     public void DuplicateConstantError() throws DependencyException{
         Injector injector = new Container();
         injector.registerConstant("I", 42);
-        injector.registerConstant("I", 94);
+        assertThrows(DependencyException.class, () -> injector.registerConstant("I", 94));
+        assertDoesNotThrow(() -> injector.registerConstant("New Constant", 30));
     }
 
-    @Test(expected = DependencyException.class)
+    @Test
     public void DuplicateFactoryError() throws DependencyException{
         Injector injector = new Container();
         injector.registerConstant("I", 42);
         injector.registerFactory("D", new FactoryD1(), "I");
-        injector.registerFactory("D", new FactoryD1(), "I");
+        assertThrows(DependencyException.class,() -> injector.registerFactory("D", new FactoryD1(), "I"));
+        assertDoesNotThrow(() -> injector.registerFactory("E", new FactoryD1(), "I"));
     }
 
-    @Test(expected = DependencyException.class)
-    public void getNonExistentError() throws DependencyException{
+    @Test
+    public void getNonExistentError(){
         Injector injector = new Container();
-        injector.getObject("D");
+        assertThrows(DependencyException.class,() -> injector.getObject("D"));
     }
 
     @Test
