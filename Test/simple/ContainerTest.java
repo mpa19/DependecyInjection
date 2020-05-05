@@ -2,8 +2,17 @@ package simple;
 
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import simple.FactoryTest.FactoryA1;
+import simple.FactoryTest.FactoryB1;
+import simple.FactoryTest.FactoryC1;
 import simple.FactoryTest.FactoryD1;
+import simple.implementations.ImplementationA1;
+import simple.implementations.ImplementationB1;
+import simple.implementations.ImplementationC1;
 import simple.implementations.ImplementationD1;
+import simple.interfaces.InterfaceA;
+import simple.interfaces.InterfaceB;
+import simple.interfaces.InterfaceC;
 import simple.interfaces.InterfaceD;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -90,12 +99,30 @@ public class ContainerTest {
     @Test(expected = DependencyException.class)
     public void getNonExistentError() throws DependencyException{
         Injector injector = new Container();
-        InterfaceD d = (InterfaceD) injector.getObject("D");
+        injector.getObject("D");
     }
 
     @Test
-    public void juego() throws DependencyException{
+    public void factoryA1Correctly() throws DependencyException{
+        Injector injector = new Container();
+        injector.registerConstant("I", 42);
+        injector.registerConstant("A", "CONSTANT");
+        injector.registerFactory("Z", new FactoryD1(), "I");
+        injector.registerFactory("C", new FactoryB1(), "Z");
+        injector.registerFactory("T", new FactoryC1(), "A");
+        injector.registerFactory("D", new FactoryA1(), "C","T");
 
+        InterfaceA a = (InterfaceA) injector.getObject("D");
+        ImplementationA1 a1 = (ImplementationA1) a;
 
+        InterfaceB b = a1.getB();
+        ImplementationB1 b1 = (ImplementationB1) b;
+        InterfaceD d = b1.getD();
+        ImplementationD1 d1 = (ImplementationD1) d;
+        assertThat(d1.getI(), is(42));
+
+        InterfaceC c = a1.getC();
+        ImplementationC1 c1 = (ImplementationC1) c;
+        assertThat(c1.getS(), is("CONSTANT"));
     }
 }
