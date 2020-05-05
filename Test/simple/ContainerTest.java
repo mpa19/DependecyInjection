@@ -1,7 +1,7 @@
 package simple;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import simple.FactoryTest.FactoryD1;
 import simple.implementations.ImplementationD1;
 import simple.interfaces.InterfaceD;
@@ -13,6 +13,17 @@ import static org.junit.Assert.assertThat;
 
 public class ContainerTest {
 
+
+    private Factory factoryA;
+    private Factory factoryB;
+    private Factory factoryC;
+    private Factory factoryD;
+
+
+    @BeforeEach
+    void setUp(){
+
+    }
 
     @Test
     public void TestFactoryOneParam() throws DependencyException {
