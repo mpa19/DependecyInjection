@@ -125,4 +125,37 @@ public class ContainerTest {
         ImplementationC1 c1 = (ImplementationC1) c;
         assertThat(c1.getS(), is("CONSTANT"));
     }
+
+    @Test
+    public void getLoop() throws DependencyException{
+        Injector injector = new Container();
+        injector.registerConstant("B", 42);
+        injector.registerSingleton("I", new FactoryD1(), "B");
+        injector.registerSingleton("A", new FactoryD1(), "I");
+        //injector.registerFactory("I", new FactoryD1(), "B");
+        //injector.registerFactory("B", new FactoryD1(), "A");
+        injector.registerSingleton("Z", new FactoryD1(), "I", "A");
+
+
+
+
+        InterfaceD d = (InterfaceD) injector.getObject("Z");
+
+
+    }
+
+    @Test
+    public void getLoop2() throws DependencyException{
+        Injector injector = new Container();
+        injector.registerSingleton("I", new FactoryD1(), "B");
+        injector.registerSingleton("B", new FactoryD1(), "A");
+        injector.registerSingleton("A", new FactoryD1(), "I");
+
+
+
+
+        InterfaceD d = (InterfaceD) injector.getObject("A");
+
+
+    }
 }
