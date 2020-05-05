@@ -12,6 +12,12 @@ public class Arguments<A, B, C> {
         this.dependencies = third;
     }
 
+    public Arguments(A type, B factoryVal) {
+        this.type = type;
+        this.factoryVal = factoryVal;
+        this.dependencies = null;
+    }
+
     public A getType() {
         return type;
 

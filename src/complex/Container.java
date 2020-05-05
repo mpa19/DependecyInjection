@@ -22,7 +22,7 @@ public class Container implements Injector {
     public <E> void registerConstant(Class<E> name, E value) throws DependencyException {
         if(services.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        services.put(name, new Arguments<>(ObjectType.CONSTANT, value, null));
+        services.put(name, new Arguments<>(ObjectType.CONSTANT, value));
     }
 
     @Override
