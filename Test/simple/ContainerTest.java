@@ -99,6 +99,43 @@ public class ContainerTest {
         assertThat(c1.getS(), is("CONSTANT"));
     }
 
+    @Test
+    public void factoryB1Correctly() throws DependencyException {
+        addConstant();
+        addFactory();
+
+        InterfaceB b = (InterfaceB) injector.getObject("C");
+        ImplementationB1 b1 = (ImplementationB1) b;
+
+        InterfaceD d = b1.getD();
+        ImplementationD1 d1 = (ImplementationD1) d;
+        assertThat(d1.getI(), is(42));
+
+    }
+
+    @Test
+    public void factoryC1Correctly() throws DependencyException {
+        addConstant();
+        addFactory();
+
+        InterfaceC c = (InterfaceC) injector.getObject("I");
+        ImplementationC1 c1 = (ImplementationC1) c;
+        assertThat(c1.getS(), is("A"));
+
+
+    }
+
+    @Test
+    public void factoryD1Correctly() throws DependencyException {
+        addConstant();
+        addFactory();
+
+        InterfaceD d = (InterfaceD) injector.getObject("Z");
+        ImplementationD1 d1 = (ImplementationD1) d;
+        assertThat(d1.getI(), is(42));
+
+    }
+
     private void addFactory() throws DependencyException {
 
         injector.registerFactory("Z", new FactoryD1(), "I");
