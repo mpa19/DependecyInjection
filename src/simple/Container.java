@@ -10,42 +10,42 @@ public class Container implements Injector {
 
     private enum ObjectType {CONSTANT, FACTORY, SINGLETON}
 
-    private final Map<String, Arguments> services;
+    private final Map<String, Arguments> registered;
 
     private static Map<String, Object> singleton;
 
     private ArrayList<String> creating;
 
     public Container() {
-        this.services = new HashMap<>();
+        this.registered = new HashMap<>();
         this.singleton = new HashMap<>();
         this.creating = new ArrayList<>();
     }
 
     @Override
     public void registerConstant(String name, Object value) throws DependencyException {
-        if(services.containsKey(name))
+        if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        services.put(name, new Arguments<>(ObjectType.CONSTANT, value));
+        registered.put(name, new Arguments<>(ObjectType.CONSTANT, value));
     }
 
     @Override
     public void registerFactory(String name, Factory creator, String... parameters) throws DependencyException {
-        if(services.containsKey(name))
+        if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        services.put(name, new Arguments<>(ObjectType.FACTORY, creator, parameters));
+        registered.put(name, new Arguments<>(ObjectType.FACTORY, creator, parameters));
     }
 
     @Override
     public void registerSingleton(String name, Factory creator, String... parameters) throws DependencyException {
-        if(services.containsKey(name))
+        if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        services.put(name, new Arguments<>(ObjectType.SINGLETON, creator, parameters));
+        registered.put(name, new Arguments<>(ObjectType.SINGLETON, creator, parameters));
     }
 
     @Override
     public Object getObject(String name) throws DependencyException {
-        Arguments<ObjectType, Object, Object> value = services.get(name);
+        Arguments<ObjectType, Object, Object> value = registered.get(name);
         if(value == null)
             throw new DependencyException(new DependencyException("The key was not found in the map."));
         if(creating.contains(name)) throw new DependencyException(new DependencyException("Dependency cycle."));

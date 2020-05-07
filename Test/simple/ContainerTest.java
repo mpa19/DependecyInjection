@@ -1,7 +1,6 @@
 package simple;
 
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import simple.FactoryTest.FactoryA1;
 import simple.FactoryTest.FactoryB1;
 import simple.FactoryTest.FactoryC1;
@@ -24,18 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ContainerTest {
 
-    private Factory factoryA;
-    private Factory factoryB;
-    private Factory factoryC;
-    private Factory factoryD;
     private Injector injector;
-
-
-    @BeforeEach
-    void setUp(){
-
-
-    }
 
     @Test
     public void TestFactoryOneParam() throws DependencyException {
