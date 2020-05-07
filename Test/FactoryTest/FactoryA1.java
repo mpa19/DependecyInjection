@@ -1,6 +1,6 @@
 package FactoryTest;
 
-import simple.DependencyException;
+import common.DependencyException;
 import simple.Factory;
 import implementations.ImplementationA1;
 import interfaces.InterfaceB;

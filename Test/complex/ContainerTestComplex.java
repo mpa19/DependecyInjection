@@ -5,28 +5,28 @@ public class ContainerTestComplex {
     private Injector injector;
 
     /*@Test
-    public void TestFactoryOneParam() throws simple.DependencyException {
+    public void TestFactoryOneParam() throws common.DependencyException {
         addConstant();
         injector.registerFactory("D",  new FactoryD1(), "I");
         verification();
     }
 
     @Test
-    public void TestFactoryMultiParam() throws simple.DependencyException {
+    public void TestFactoryMultiParam() throws common.DependencyException {
         addConstant();
         injector.registerFactory("D", new FactoryD1(), "I", "E", "N");
         verification();
     }
 
     @Test
-    public void TestSingletonSimple() throws simple.DependencyException {
+    public void TestSingletonSimple() throws common.DependencyException {
         addConstant();
         injector.registerSingleton("D", new FactoryD1(), "I", "E", "N");
         verification();
     }
 
     @Test
-    public void TestSingleton() throws simple.DependencyException {
+    public void TestSingleton() throws common.DependencyException {
         addConstant();
         injector.registerSingleton("F", new FactoryD1(), "I");
 
@@ -36,36 +36,36 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void DuplicateConstantError() throws simple.DependencyException {
+    public void DuplicateConstantError() throws common.DependencyException {
         addConstant();
-        assertThrows(simple.DependencyException.class, () -> injector.registerConstant("I", 94));
+        assertThrows(common.DependencyException.class, () -> injector.registerConstant("I", 94));
         assertDoesNotThrow(() -> injector.registerConstant("New Constant", 30));
     }
 
     @Test
-    public void DuplicateFactoryError() throws simple.DependencyException {
+    public void DuplicateFactoryError() throws common.DependencyException {
         addConstant();
         addFactory();
-        assertThrows(simple.DependencyException.class,() -> injector.registerFactory("D", new FactoryD1(), "I"));
+        assertThrows(common.DependencyException.class,() -> injector.registerFactory("D", new FactoryD1(), "I"));
         assertDoesNotThrow(() -> injector.registerFactory("K", new FactoryD1(), "I"));
     }
 
     @Test
-    public void getNonExistent() throws simple.DependencyException {
+    public void getNonExistent() throws common.DependencyException {
         addConstant();
         injector.registerFactory("D", new FactoryD1(), "I");
-        assertThrows(simple.DependencyException.class,() -> injector.getObject("D"));
+        assertThrows(common.DependencyException.class,() -> injector.getObject("D"));
     }
 
     @Test
-    public void setNonExistentDependency() throws simple.DependencyException {
+    public void setNonExistentDependency() throws common.DependencyException {
         addConstant();
         injector.registerFactory("H", new FactoryD1(), "L");
-        assertThrows(simple.DependencyException.class,() -> injector.getObject("H"));
+        assertThrows(common.DependencyException.class,() -> injector.getObject("H"));
     }
 
     @Test
-    public void factoryA1Correctly() throws simple.DependencyException {
+    public void factoryA1Correctly() throws common.DependencyException {
         addConstant();
         addFactory();
 
@@ -84,7 +84,7 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void factoryB1Correctly() throws simple.DependencyException {
+    public void factoryB1Correctly() throws common.DependencyException {
         addConstant();
         addFactory();
 
@@ -97,7 +97,7 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void factoryC1Correctly() throws simple.DependencyException {
+    public void factoryC1Correctly() throws common.DependencyException {
         addConstant();
         addFactory();
 
@@ -107,7 +107,7 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void factoryD1Correctly() throws simple.DependencyException {
+    public void factoryD1Correctly() throws common.DependencyException {
         addConstant();
         addFactory();
 
@@ -117,25 +117,25 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void setInadequateObject() throws simple.DependencyException {
+    public void setInadequateObject() throws common.DependencyException {
         addConstant();
         addFactory();
         injector.registerSingleton("H", new FactoryD1(), "T");
 
-        assertThrows(simple.DependencyException.class,() -> injector.getObject("H"));
+        assertThrows(common.DependencyException.class,() -> injector.getObject("H"));
     }
 
     @Test
-    public void getLoop() throws simple.DependencyException {
+    public void getLoop() throws common.DependencyException {
         addConstant();
         injector.registerSingleton("G", new FactoryD1(), "B");
         injector.registerSingleton("B", new FactoryD1(), "H");
         injector.registerSingleton("H", new FactoryD1(), "G");
 
-        assertThrows(simple.DependencyException.class,() -> injector.getObject("H"));
+        assertThrows(common.DependencyException.class,() -> injector.getObject("H"));
     }
 
-    private void addConstant() throws simple.DependencyException {
+    private void addConstant() throws common.DependencyException {
         injector = new Container();
 
         injector.registerConstant("I", 42);
@@ -144,7 +144,7 @@ public class ContainerTestComplex {
         injector.registerConstant("A", "CONSTANT");
     }
 
-    private void addFactory() throws simple.DependencyException {
+    private void addFactory() throws common.DependencyException {
 
         injector.registerFactory("Z", new FactoryD1(), "I");
         injector.registerFactory("C", new FactoryB1(), "Z");

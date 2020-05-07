@@ -1,5 +1,6 @@
 package simple;
 
+import common.DependencyException;
 import implementations.ImplementationA1;
 import implementations.ImplementationB1;
 import implementations.ImplementationC1;

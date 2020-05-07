@@ -1,8 +1,10 @@
 package complex;
 
+import common.DependencyException;
+
 public interface Injector {
 
-    <E> void registerConstant(Class<E> name, E value) throws DependencyException;
+    <E> void registerConstant(Class<E> name, E value) throws DependencyException, DependencyException;
 
     <E> void registerFactory(Class<E> name, Factory<? extends E> creator, Class<E>... parameters) throws DependencyException;
 

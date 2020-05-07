@@ -1,5 +1,7 @@
 package simple;
 
+import common.DependencyException;
+
 public interface Injector {
 
     void registerConstant(String name, Object value) throws DependencyException;

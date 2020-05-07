@@ -1,5 +1,6 @@
 package simple;
 
+import common.DependencyException;
 import utils.Arguments;
 
 import java.util.ArrayList;

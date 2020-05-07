@@ -1,5 +1,6 @@
 package complex;
 
+import common.DependencyException;
 import utils.Arguments;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class Container implements Injector {
         Arguments<ObjectType, Object, Object> value = registered.get(name);
         if(value == null)
             throw new DependencyException(new DependencyException("The key was not found in the map."));
-        if(creating.contains(name)) throw new complex.DependencyException(new simple.DependencyException("Dependency cycle."));
+        if(creating.contains(name)) throw new DependencyException(new common.DependencyException("Dependency cycle."));
 
         switch(value.getType()) {
             case FACTORY:
@@ -69,7 +70,7 @@ public class Container implements Injector {
                 creating.remove(name);
                 return (E) singleton.get(name);
         }
-        throw new complex.DependencyException(new simple.DependencyException("The ObjectType was neither FACTORY, CONSTANT or SINGLETON."));
+        throw new DependencyException(new common.DependencyException("The ObjectType was neither FACTORY, CONSTANT or SINGLETON."));
     }
 
     private Object[] funAux(Arguments value, Class name) throws DependencyException {
