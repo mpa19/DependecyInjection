@@ -27,21 +27,21 @@ public class Container implements Injector {
     public <E> void registerConstant(Class<E> name, E value) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments<>(ObjectType.CONSTANT, value));
+        registered.put(name, new Arguments(ObjectType.CONSTANT, value));
     }
 
     @Override
     public <E> void registerFactory(Class<E> name, Factory<? extends E> creator, Class<E>... parameters) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments<>(ObjectType.FACTORY, creator, parameters));
+        registered.put(name, new Arguments(ObjectType.FACTORY, creator, parameters));
     }
 
     @Override
     public <E> void registerSingleton(Class<E> name, Factory<? extends E> creator, Class<E>... parameters) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments<>(ObjectType.SINGLETON, creator, parameters));
+        registered.put(name, new Arguments(ObjectType.SINGLETON, creator, parameters));
     }
 
     @Override
