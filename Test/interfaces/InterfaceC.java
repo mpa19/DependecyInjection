@@ -1,4 +1,4 @@
-package simple.interfaces;
+package interfaces;
 
 public interface InterfaceC {
 }

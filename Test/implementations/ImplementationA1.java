@@ -1,8 +1,8 @@
-package simple.implementations;
+package implementations;
 
-import simple.interfaces.InterfaceA;
-import simple.interfaces.InterfaceB;
-import simple.interfaces.InterfaceC;
+import interfaces.InterfaceA;
+import interfaces.InterfaceB;
+import interfaces.InterfaceC;
 
 public class ImplementationA1 implements InterfaceA {
     public InterfaceB getB() {

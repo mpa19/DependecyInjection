@@ -1,6 +1,6 @@
-package simple.implementations;
+package implementations;
 
-import simple.interfaces.InterfaceC;
+import interfaces.InterfaceC;
 
 public class ImplementationC1 implements InterfaceC {
     public String getS() {

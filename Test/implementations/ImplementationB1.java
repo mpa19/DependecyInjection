@@ -1,7 +1,7 @@
-package simple.implementations;
+package implementations;
 
-import simple.interfaces.InterfaceB;
-import simple.interfaces.InterfaceD;
+import interfaces.InterfaceB;
+import interfaces.InterfaceD;
 
 public class ImplementationB1 implements InterfaceB {
 
