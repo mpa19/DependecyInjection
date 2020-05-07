@@ -66,6 +66,7 @@ public class Container implements Injector {
                     singleton.put(name, val);
                     return val;
                 }
+                creating.remove(name);
                 return (E) singleton.get(name);
         }
         throw new complex.DependencyException(new simple.DependencyException("The ObjectType was neither FACTORY, CONSTANT or SINGLETON."));

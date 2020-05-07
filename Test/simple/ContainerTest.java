@@ -40,7 +40,7 @@ public class ContainerTest {
     @Test
     public void TestFactoryOneParam() throws DependencyException {
         addConstant();
-        injector.registerFactory("D", new FactoryD1(), "I");
+        injector.registerFactory("D",  new FactoryD1(), "I");
         verification();
     }
 
@@ -52,11 +52,20 @@ public class ContainerTest {
     }
 
     @Test
-    public void TestSingleton() throws DependencyException {
+    public void TestSingletonSimple() throws DependencyException {
         addConstant();
         injector.registerSingleton("D", new FactoryD1(), "I", "E", "N");
         verification();
+    }
 
+    @Test
+    public void TestSingleton() throws DependencyException {
+        addConstant();
+        injector.registerSingleton("F", new FactoryD1(), "I");
+
+        InterfaceD d = (InterfaceD) injector.getObject("F");
+        InterfaceD d1 = (InterfaceD) injector.getObject("F");
+        assertThat(d, instanceOf(d1.getClass()));
     }
 
     @Test
@@ -75,9 +84,17 @@ public class ContainerTest {
     }
 
     @Test
-    public void getNonExistentError() throws DependencyException {
+    public void getNonExistent() throws DependencyException {
         addConstant();
+        injector.registerFactory("D", new FactoryD1(), "I");
         assertThrows(DependencyException.class,() -> injector.getObject("D"));
+    }
+
+    @Test
+    public void setNonExistentDependency() throws DependencyException {
+        addConstant();
+        injector.registerFactory("H", new FactoryD1(), "L");
+        assertThrows(DependencyException.class,() -> injector.getObject("H"));
     }
 
     @Test
@@ -110,7 +127,6 @@ public class ContainerTest {
         InterfaceD d = b1.getD();
         ImplementationD1 d1 = (ImplementationD1) d;
         assertThat(d1.getI(), is(42));
-
     }
 
     @Test
@@ -118,11 +134,9 @@ public class ContainerTest {
         addConstant();
         addFactory();
 
-        InterfaceC c = (InterfaceC) injector.getObject("I");
+        InterfaceC c = (InterfaceC) injector.getObject("T");
         ImplementationC1 c1 = (ImplementationC1) c;
-        assertThat(c1.getS(), is("A"));
-
-
+        assertThat(c1.getS(), is("CONSTANT"));
     }
 
     @Test
@@ -133,7 +147,34 @@ public class ContainerTest {
         InterfaceD d = (InterfaceD) injector.getObject("Z");
         ImplementationD1 d1 = (ImplementationD1) d;
         assertThat(d1.getI(), is(42));
+    }
 
+    @Test
+    public void setInadequateObject() throws DependencyException{
+        addConstant();
+        addFactory();
+        injector.registerSingleton("H", new FactoryD1(), "T");
+
+        assertThrows(DependencyException.class,() -> injector.getObject("H"));
+    }
+
+    @Test
+    public void getLoop() throws DependencyException{
+        addConstant();
+        injector.registerSingleton("G", new FactoryD1(), "B");
+        injector.registerSingleton("B", new FactoryD1(), "H");
+        injector.registerSingleton("H", new FactoryD1(), "G");
+
+        assertThrows(DependencyException.class,() -> injector.getObject("H"));
+    }
+
+    private void addConstant() throws DependencyException {
+        injector = new Container();
+
+        injector.registerConstant("I", 42);
+        injector.registerConstant("E", 52);
+        injector.registerConstant("N", 82);
+        injector.registerConstant("A", "CONSTANT");
     }
 
     private void addFactory() throws DependencyException {
@@ -144,55 +185,11 @@ public class ContainerTest {
         injector.registerFactory("D", new FactoryA1(), "C","T");
     }
 
-    private void addConstant() throws DependencyException {
-        injector = new Container();
-
-        injector.registerConstant("I", 42);
-        injector.registerConstant("E", 52);
-        injector.registerConstant("N", 82);
-        injector.registerConstant("A", "CONSTANT");
-
-    }
-
     private void verification() throws DependencyException {
-
         InterfaceD d = (InterfaceD) injector.getObject("D");
         assertThat(d, instanceOf(ImplementationD1.class));
         ImplementationD1 d1 = (ImplementationD1) d;
         assertThat(d1.getI(), is(42));
-
-    }
-
-    @Test
-    public void getLoop() throws DependencyException{
-        Injector injector = new Container();
-        injector.registerConstant("B", 42);
-        injector.registerSingleton("I", new FactoryD1(), "B");
-        injector.registerSingleton("A", new FactoryD1(), "I");
-        //injector.registerFactory("I", new FactoryD1(), "B");
-        //injector.registerFactory("B", new FactoryD1(), "A");
-        injector.registerSingleton("Z", new FactoryD1(), "I", "A");
-
-
-
-
-        InterfaceD d = (InterfaceD) injector.getObject("Z");
-
-
-    }
-
-    @Test
-    public void getLoop2() throws DependencyException{
-        Injector injector = new Container();
-        injector.registerSingleton("I", new FactoryD1(), "B");
-        injector.registerSingleton("B", new FactoryD1(), "A");
-        injector.registerSingleton("A", new FactoryD1(), "I");
-
-
-
-
-        InterfaceD d = (InterfaceD) injector.getObject("A");
-
 
     }
 }
