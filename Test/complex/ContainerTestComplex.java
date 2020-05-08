@@ -70,8 +70,7 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void getNonExistent() throws DependencyException {
-        addConstant();
+    public void getNonExistent() {
         assertThrows(common.DependencyException.class,() -> injector.getObject(InterfaceD.class));
     }
 

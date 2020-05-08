@@ -81,7 +81,7 @@ public class ContainerTest {
     }
 
     @Test
-    public void getNonExistent() throws DependencyException {
+    public void getNonExistent() {
         assertThrows(DependencyException.class,() -> injector.getObject("D"));
     }
 
