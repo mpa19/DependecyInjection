@@ -43,16 +43,17 @@ public class ContainerTestComplex {
         injector.registerSingleton(InterfaceD.class, new FactoryD1(), Integer.class);
         verification();
     }
-/*
-    @Test
-    public void TestSingleton() throws DependencyException {
-        addConstant();
-        injector.registerSingleton("F", new FactoryD1(), "I");
 
-        InterfaceD d = (InterfaceD) injector.getObject("F");
-        InterfaceD d1 = (InterfaceD) injector.getObject("F");
-        assertThat(d, instanceOf(d1.getClass()));
-    }*/
+    @Test
+    public void TestSingletonSameInstance() throws DependencyException {
+        addConstant();
+        addFactorySingleton();
+
+        InterfaceC a = injector.getObject(InterfaceC.class);
+        InterfaceC a1 = injector.getObject(InterfaceC.class);
+
+        assertThat(a1, is(a));
+    }
 
 
     @Test

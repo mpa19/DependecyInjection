@@ -24,6 +24,7 @@ public class Container implements Injector {
         this.creating = new ArrayList<>();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <E> void registerConstant(Class<E> name, E value) throws DependencyException {
         if(registered.containsKey(name))
@@ -31,6 +32,7 @@ public class Container implements Injector {
         registered.put(name, new Arguments(ObjectType.CONSTANT, value));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <E> void registerFactory(Class<E> name, Factory<? extends E> creator, Class<?>... parameters) throws DependencyException {
         if(registered.containsKey(name))
@@ -38,6 +40,7 @@ public class Container implements Injector {
         registered.put(name, new Arguments(ObjectType.FACTORY, creator, parameters));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <E> void registerSingleton(Class<E> name, Factory<? extends E> creator, Class<?>... parameters) throws DependencyException {
         if(registered.containsKey(name))
@@ -45,6 +48,7 @@ public class Container implements Injector {
         registered.put(name, new Arguments(ObjectType.SINGLETON, creator, parameters));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <E> E getObject(Class<E> name) throws DependencyException {
         Arguments<ObjectType, Object, Object> value = registered.get(name);
@@ -73,6 +77,7 @@ public class Container implements Injector {
         throw new DependencyException(new common.DependencyException("The ObjectType was neither FACTORY, CONSTANT or SINGLETON."));
     }
 
+    @SuppressWarnings("unchecked")
     private Object[] funAux(Arguments value, Class name) throws DependencyException {
         Class[] values = (Class[]) value.getDependencies();
 
