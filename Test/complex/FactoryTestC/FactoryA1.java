@@ -1,12 +1,12 @@
-package FactoryTest;
+package complex.FactoryTestC;
 
 import common.DependencyException;
-import simple.Factory;
+import complex.Factory;
 import implementations.ImplementationA1;
 import interfaces.InterfaceB;
 import interfaces.InterfaceC;
 
-public class FactoryA1 implements Factory {
+public class FactoryA1 implements Factory<ImplementationA1> {
     @Override
     public ImplementationA1 create(Object... parameters) throws DependencyException {
         InterfaceB i;

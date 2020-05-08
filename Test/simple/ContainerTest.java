@@ -10,10 +10,10 @@ import interfaces.InterfaceB;
 import interfaces.InterfaceC;
 import interfaces.InterfaceD;
 import org.junit.Test;
-import FactoryTest.FactoryA1;
-import FactoryTest.FactoryB1;
-import FactoryTest.FactoryC1;
-import FactoryTest.FactoryD1;
+import simple.FactoryTest.FactoryA1;
+import simple.FactoryTest.FactoryB1;
+import simple.FactoryTest.FactoryC1;
+import simple.FactoryTest.FactoryD1;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;

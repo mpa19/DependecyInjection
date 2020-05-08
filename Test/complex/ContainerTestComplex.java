@@ -1,32 +1,51 @@
 package complex;
 
+import common.DependencyException;
+import complex.FactoryTestC.FactoryC1;
+import complex.FactoryTestC.FactoryD1;
+import implementations.ImplementationA1;
+import implementations.ImplementationB1;
+import implementations.ImplementationC1;
+import implementations.ImplementationD1;
+import interfaces.InterfaceA;
+import interfaces.InterfaceB;
+import interfaces.InterfaceC;
+import interfaces.InterfaceD;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class ContainerTestComplex {
 
     private Injector injector;
 
-    /*@Test
-    public void TestFactoryOneParam() throws common.DependencyException {
+    @Test
+    public void TestFactoryOneParam() throws DependencyException {
         addConstant();
-        injector.registerFactory("D",  new FactoryD1(), "I");
+        injector.registerFactory(InterfaceD.class, new FactoryD1(), Integer.class);
         verification();
     }
 
     @Test
-    public void TestFactoryMultiParam() throws common.DependencyException {
+    public void TestFactoryMultiParam() throws DependencyException {
         addConstant();
         injector.registerFactory("D", new FactoryD1(), "I", "E", "N");
         verification();
     }
 
     @Test
-    public void TestSingletonSimple() throws common.DependencyException {
+    public void TestSingletonSimple() throws DependencyException {
         addConstant();
         injector.registerSingleton("D", new FactoryD1(), "I", "E", "N");
         verification();
     }
 
     @Test
-    public void TestSingleton() throws common.DependencyException {
+    public void TestSingleton() throws DependencyException {
         addConstant();
         injector.registerSingleton("F", new FactoryD1(), "I");
 
@@ -36,14 +55,14 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void DuplicateConstantError() throws common.DependencyException {
+    public void DuplicateConstantError() throws DependencyException {
         addConstant();
         assertThrows(common.DependencyException.class, () -> injector.registerConstant("I", 94));
         assertDoesNotThrow(() -> injector.registerConstant("New Constant", 30));
     }
 
     @Test
-    public void DuplicateFactoryError() throws common.DependencyException {
+    public void DuplicateFactoryError() throws DependencyException {
         addConstant();
         addFactory();
         assertThrows(common.DependencyException.class,() -> injector.registerFactory("D", new FactoryD1(), "I"));
@@ -51,21 +70,21 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void getNonExistent() throws common.DependencyException {
+    public void getNonExistent() throws DependencyException {
         addConstant();
         injector.registerFactory("D", new FactoryD1(), "I");
         assertThrows(common.DependencyException.class,() -> injector.getObject("D"));
     }
 
     @Test
-    public void setNonExistentDependency() throws common.DependencyException {
+    public void setNonExistentDependency() throws DependencyException {
         addConstant();
         injector.registerFactory("H", new FactoryD1(), "L");
         assertThrows(common.DependencyException.class,() -> injector.getObject("H"));
     }
 
     @Test
-    public void factoryA1Correctly() throws common.DependencyException {
+    public void factoryA1Correctly() throws DependencyException {
         addConstant();
         addFactory();
 
@@ -84,7 +103,7 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void factoryB1Correctly() throws common.DependencyException {
+    public void factoryB1Correctly() throws DependencyException {
         addConstant();
         addFactory();
 
@@ -107,7 +126,7 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void factoryD1Correctly() throws common.DependencyException {
+    public void factoryD1Correctly() throws DependencyException {
         addConstant();
         addFactory();
 
@@ -117,7 +136,7 @@ public class ContainerTestComplex {
     }
 
     @Test
-    public void setInadequateObject() throws common.DependencyException {
+    public void setInadequateObject() throws DependencyException {
         addConstant();
         addFactory();
         injector.registerSingleton("H", new FactoryD1(), "T");
@@ -135,28 +154,29 @@ public class ContainerTestComplex {
         assertThrows(common.DependencyException.class,() -> injector.getObject("H"));
     }
 
-    private void addConstant() throws common.DependencyException {
+    private void addConstant() throws DependencyException {
         injector = new Container();
 
-        injector.registerConstant("I", 42);
-        injector.registerConstant("E", 52);
-        injector.registerConstant("N", 82);
-        injector.registerConstant("A", "CONSTANT");
+        injector.registerConstant(Integer.class, 42);
+        injector.registerConstant(Integer.class, 52);
+        injector.registerConstant(Integer.class, 82);
+        injector.registerConstant(String.class, "CONSTANT");
     }
 
-    private void addFactory() throws common.DependencyException {
+    private void addFactory() throws DependencyException {
 
-        injector.registerFactory("Z", new FactoryD1(), "I");
+        injector.registerFactory(InterfaceD.class, new FactoryD1(), Integer.class);
         injector.registerFactory("C", new FactoryB1(), "Z");
         injector.registerFactory("T", new FactoryC1(), "A");
         injector.registerFactory("D", new FactoryA1(), "C","T");
     }
 
     private void verification() throws DependencyException {
-        InterfaceD d = (InterfaceD) injector.getObject("D");
+        InterfaceD d = (InterfaceD) injector.getObject("A");
         assertThat(d, instanceOf(ImplementationD1.class));
         ImplementationD1 d1 = (ImplementationD1) d;
         assertThat(d1.getI(), is(42));
 
-    }*/
+    }
+
 }
