@@ -1,6 +1,8 @@
 package complex;
 
 import common.DependencyException;
+import complex.FactoryTestC.FactoryA1;
+import complex.FactoryTestC.FactoryB1;
 import complex.FactoryTestC.FactoryC1;
 import complex.FactoryTestC.FactoryD1;
 import implementations.ImplementationA1;
@@ -11,39 +13,37 @@ import interfaces.InterfaceA;
 import interfaces.InterfaceB;
 import interfaces.InterfaceC;
 import interfaces.InterfaceD;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ContainerTestComplex {
 
     private Injector injector;
 
+    @BeforeEach
+    public void start(){
+        injector = new Container();
+    }
+
     @Test
-    public void TestFactoryOneParam() throws DependencyException {
+    public void TestFactory() throws DependencyException {
         addConstant();
         injector.registerFactory(InterfaceD.class, new FactoryD1(), Integer.class);
         verification();
     }
 
     @Test
-    public void TestFactoryMultiParam() throws DependencyException {
+    public void TestSingleton() throws DependencyException {
         addConstant();
-        injector.registerFactory("D", new FactoryD1(), "I", "E", "N");
+        injector.registerSingleton(InterfaceD.class, new FactoryD1(), Integer.class);
         verification();
     }
-
-    @Test
-    public void TestSingletonSimple() throws DependencyException {
-        addConstant();
-        injector.registerSingleton("D", new FactoryD1(), "I", "E", "N");
-        verification();
-    }
-
+/*
     @Test
     public void TestSingleton() throws DependencyException {
         addConstant();
@@ -52,43 +52,40 @@ public class ContainerTestComplex {
         InterfaceD d = (InterfaceD) injector.getObject("F");
         InterfaceD d1 = (InterfaceD) injector.getObject("F");
         assertThat(d, instanceOf(d1.getClass()));
-    }
+    }*/
+
 
     @Test
     public void DuplicateConstantError() throws DependencyException {
         addConstant();
-        assertThrows(common.DependencyException.class, () -> injector.registerConstant("I", 94));
-        assertDoesNotThrow(() -> injector.registerConstant("New Constant", 30));
+        assertThrows(common.DependencyException.class, () -> injector.registerConstant(Integer.class, 94));
     }
 
     @Test
     public void DuplicateFactoryError() throws DependencyException {
         addConstant();
-        addFactory();
-        assertThrows(common.DependencyException.class,() -> injector.registerFactory("D", new FactoryD1(), "I"));
-        assertDoesNotThrow(() -> injector.registerFactory("K", new FactoryD1(), "I"));
+        addFactorySingleton();
+        assertThrows(common.DependencyException.class,() -> injector.registerFactory(InterfaceD.class, new FactoryD1(), Integer.class));
     }
 
     @Test
     public void getNonExistent() throws DependencyException {
         addConstant();
-        injector.registerFactory("D", new FactoryD1(), "I");
-        assertThrows(common.DependencyException.class,() -> injector.getObject("D"));
+        assertThrows(common.DependencyException.class,() -> injector.getObject(InterfaceD.class));
     }
 
     @Test
     public void setNonExistentDependency() throws DependencyException {
-        addConstant();
-        injector.registerFactory("H", new FactoryD1(), "L");
-        assertThrows(common.DependencyException.class,() -> injector.getObject("H"));
+        addFactorySingleton();
+        assertThrows(common.DependencyException.class,() -> injector.getObject(InterfaceD.class));
     }
 
     @Test
     public void factoryA1Correctly() throws DependencyException {
         addConstant();
-        addFactory();
+        addFactorySingleton();
 
-        InterfaceA a = (InterfaceA) injector.getObject("D");
+        InterfaceA a = injector.getObject(InterfaceA.class);
         ImplementationA1 a1 = (ImplementationA1) a;
 
         InterfaceB b = a1.getB();
@@ -105,9 +102,9 @@ public class ContainerTestComplex {
     @Test
     public void factoryB1Correctly() throws DependencyException {
         addConstant();
-        addFactory();
+        addFactorySingleton();
 
-        InterfaceB b = (InterfaceB) injector.getObject("C");
+        InterfaceB b = injector.getObject(InterfaceB.class);
         ImplementationB1 b1 = (ImplementationB1) b;
 
         InterfaceD d = b1.getD();
@@ -118,9 +115,9 @@ public class ContainerTestComplex {
     @Test
     public void factoryC1Correctly() throws common.DependencyException {
         addConstant();
-        addFactory();
+        addFactorySingleton();
 
-        InterfaceC c = (InterfaceC) injector.getObject("T");
+        InterfaceC c = injector.getObject(InterfaceC.class);
         ImplementationC1 c1 = (ImplementationC1) c;
         assertThat(c1.getS(), is("CONSTANT"));
     }
@@ -128,9 +125,9 @@ public class ContainerTestComplex {
     @Test
     public void factoryD1Correctly() throws DependencyException {
         addConstant();
-        addFactory();
+        addFactorySingleton();
 
-        InterfaceD d = (InterfaceD) injector.getObject("Z");
+        InterfaceD d = injector.getObject(InterfaceD.class);
         ImplementationD1 d1 = (ImplementationD1) d;
         assertThat(d1.getI(), is(42));
     }
@@ -138,45 +135,39 @@ public class ContainerTestComplex {
     @Test
     public void setInadequateObject() throws DependencyException {
         addConstant();
-        addFactory();
-        injector.registerSingleton("H", new FactoryD1(), "T");
+        injector.registerSingleton(InterfaceD.class, new FactoryD1(), String.class);
 
-        assertThrows(common.DependencyException.class,() -> injector.getObject("H"));
+        assertThrows(common.DependencyException.class,() -> injector.getObject(InterfaceD.class));
     }
+
 
     @Test
     public void getLoop() throws common.DependencyException {
         addConstant();
-        injector.registerSingleton("G", new FactoryD1(), "B");
-        injector.registerSingleton("B", new FactoryD1(), "H");
-        injector.registerSingleton("H", new FactoryD1(), "G");
-
-        assertThrows(common.DependencyException.class,() -> injector.getObject("H"));
+        injector.registerSingleton(InterfaceC.class, new FactoryC1(), InterfaceD.class);
+        injector.registerFactory(InterfaceD.class, new FactoryD1(), InterfaceB.class);
+        injector.registerSingleton(InterfaceB.class, new FactoryB1(), InterfaceC.class);
+        assertThrows(common.DependencyException.class,() -> injector.getObject(InterfaceB.class));
     }
 
     private void addConstant() throws DependencyException {
-        injector = new Container();
-
         injector.registerConstant(Integer.class, 42);
-        injector.registerConstant(Integer.class, 52);
-        injector.registerConstant(Integer.class, 82);
         injector.registerConstant(String.class, "CONSTANT");
     }
 
-    private void addFactory() throws DependencyException {
+    private void addFactorySingleton() throws DependencyException {
 
         injector.registerFactory(InterfaceD.class, new FactoryD1(), Integer.class);
-        injector.registerFactory("C", new FactoryB1(), "Z");
-        injector.registerFactory("T", new FactoryC1(), "A");
-        injector.registerFactory("D", new FactoryA1(), "C","T");
+        injector.registerSingleton(InterfaceB.class, new FactoryB1(), InterfaceD.class);
+        injector.registerSingleton(InterfaceC.class, new FactoryC1(), String.class);
+        injector.registerFactory(InterfaceA.class, new FactoryA1(), InterfaceB.class, InterfaceC.class);
     }
 
     private void verification() throws DependencyException {
-        InterfaceD d = (InterfaceD) injector.getObject("A");
+        InterfaceD d = injector.getObject(InterfaceD.class);
         assertThat(d, instanceOf(ImplementationD1.class));
         ImplementationD1 d1 = (ImplementationD1) d;
         assertThat(d1.getI(), is(42));
-
     }
 
 }
