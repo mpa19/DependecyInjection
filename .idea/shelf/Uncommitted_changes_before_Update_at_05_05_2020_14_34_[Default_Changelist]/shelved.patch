@@ -1,0 +1,18 @@
+Index: Test/simple/ContainerTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package simple;\r\n\r\nimport org.junit.Test;\r\nimport simple.FactoryTest.FactoryD1;\r\nimport simple.implementations.ImplementationD1;\r\nimport simple.interfaces.InterfaceD;\r\n\r\nimport static org.hamcrest.CoreMatchers.instanceOf;\r\nimport static org.hamcrest.CoreMatchers.is;\r\nimport static org.junit.Assert.assertThat;\r\n\r\n\r\npublic class ContainerTest {\r\n\r\n    @Test\r\n    public void test1() throws DependencyException {\r\n        Injector injector = new Container();\r\n        injector.registerConstant(\"I\", 42);\r\n        injector.registerFactory(\"D\", new FactoryD1(), \"I\");\r\n\r\n\r\n        InterfaceD d = (InterfaceD) injector.getObject(\"D\");\r\n        assertThat(d, is(instanceOf(ImplementationD1.class)));\r\n        ImplementationD1 d1 = (ImplementationD1) d;\r\n        assertThat(d1.getI(), is(42));\r\n\r\n\r\n\r\n    }\r\n\r\n    @Test\r\n    public void TestFactoryMultiParam() throws DependencyException{\r\n        Injector injector = new Container();\r\n        injector.registerConstant(\"I\", 42);\r\n        injector.registerConstant(\"E\", 52);\r\n        injector.registerConstant(\"N\", 82);\r\n        injector.registerFactory(\"D\", new FactoryD1(), \"I\", \"E\", \"N\");\r\n\r\n        InterfaceD d = (InterfaceD) injector.getObject(\"D\");\r\n        assertThat(d, instanceOf(ImplementationD1.class));\r\n        ImplementationD1 d1 = (ImplementationD1) d;\r\n        assertThat(d1.getI(), is(42));\r\n    }\r\n\r\n    @Test\r\n    public void TestSingleton() throws DependencyException {\r\n        Injector injector = new Container();\r\n        injector.registerConstant(\"I\", 42);\r\n        injector.registerConstant(\"E\", 52);\r\n        injector.registerConstant(\"N\", 82);\r\n        injector.registerSingleton(\"D\", new FactoryD1(), \"I\", \"E\", \"N\");\r\n\r\n        InterfaceD d = (InterfaceD) injector.getObject(\"D\");\r\n        assertThat(d, instanceOf(ImplementationD1.class));\r\n        ImplementationD1 d1 = (ImplementationD1) d;\r\n        assertThat(d1.getI(), is(42));\r\n\r\n        InterfaceD d12 = (InterfaceD) injector.getObject(\"D\");\r\n        assertThat(d12, instanceOf(ImplementationD1.class));\r\n        ImplementationD1 d11 = (ImplementationD1) d12;\r\n        assertThat(d11.getI(), is(42));\r\n\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Test/simple/ContainerTest.java	(revision f475eae27f61c705d83860f511160946c3478921)
++++ Test/simple/ContainerTest.java	(date 1588680865363)
+@@ -24,8 +24,6 @@
+         ImplementationD1 d1 = (ImplementationD1) d;
+         assertThat(d1.getI(), is(42));
+ 
+-
+-
+     }
+ 
+     @Test
