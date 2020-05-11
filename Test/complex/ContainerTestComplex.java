@@ -1,5 +1,6 @@
 package complex;
 
+import Common.Comun;
 import common.DependencyException;
 import complex.FactoryTestC.FactoryA1;
 import complex.FactoryTestC.FactoryB1;
@@ -21,7 +22,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ContainerTestComplex {
+public class ContainerTestComplex extends Comun {
 
     private Injector injector;
 
@@ -90,13 +91,18 @@ public class ContainerTestComplex {
 
         InterfaceB b = a1.getB();
         ImplementationB1 b1 = (ImplementationB1) b;
+
         InterfaceD d = b1.getD();
-        ImplementationD1 d1 = (ImplementationD1) d;
-        assertThat(d1.getI(), is(42));
+        /*ImplementationD1 d1 = (ImplementationD1) d;
+        assertThat(d1.getI(), is(42));*/
+
+        testD(d);
 
         InterfaceC c = a1.getC();
-        ImplementationC1 c1 = (ImplementationC1) c;
-        assertThat(c1.getS(), is("CONSTANT"));
+        /*ImplementationC1 c1 = (ImplementationC1) c;
+        assertThat(c1.getS(), is("CONSTANT"));*/
+
+        testC(c);
     }
 
     @Test
@@ -108,8 +114,10 @@ public class ContainerTestComplex {
         ImplementationB1 b1 = (ImplementationB1) b;
 
         InterfaceD d = b1.getD();
-        ImplementationD1 d1 = (ImplementationD1) d;
-        assertThat(d1.getI(), is(42));
+        /*ImplementationD1 d1 = (ImplementationD1) d;
+        assertThat(d1.getI(), is(42));*/
+
+        testD(d);
     }
 
     @Test
@@ -118,8 +126,9 @@ public class ContainerTestComplex {
         addFactorySingleton();
 
         InterfaceC c = injector.getObject(InterfaceC.class);
-        ImplementationC1 c1 = (ImplementationC1) c;
-        assertThat(c1.getS(), is("CONSTANT"));
+       /* ImplementationC1 c1 = (ImplementationC1) c;
+        assertThat(c1.getS(), is("CONSTANT"));*/
+        testC(c);
     }
 
     @Test
@@ -128,8 +137,9 @@ public class ContainerTestComplex {
         addFactorySingleton();
 
         InterfaceD d = injector.getObject(InterfaceD.class);
-        ImplementationD1 d1 = (ImplementationD1) d;
-        assertThat(d1.getI(), is(42));
+        /*ImplementationD1 d1 = (ImplementationD1) d;
+        assertThat(d1.getI(), is(42));*/
+        testD(d);
     }
 
     @Test
@@ -165,9 +175,7 @@ public class ContainerTestComplex {
 
     private void verification() throws DependencyException {
         InterfaceD d = injector.getObject(InterfaceD.class);
-        assertThat(d, instanceOf(ImplementationD1.class));
-        ImplementationD1 d1 = (ImplementationD1) d;
-        assertThat(d1.getI(), is(42));
+        testD(d);
     }
 
 }
