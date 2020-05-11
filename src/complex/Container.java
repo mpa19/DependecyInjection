@@ -11,11 +11,11 @@ public class Container implements Injector {
 
     private enum ObjectType {CONSTANT, FACTORY, SINGLETON}
 
-    private final Map<Class, Arguments> registered;
+    private final Map<Class<?>, Arguments> registered;
 
-    private static Map<Class, Object> singleton;
+    private final Map<Class<?>, Object> singleton;
 
-    private ArrayList<Class> creating;
+    private final ArrayList<Class<?>> creating;
 
 
     public Container() {
