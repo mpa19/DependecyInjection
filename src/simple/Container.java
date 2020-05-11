@@ -13,11 +13,11 @@ public class Container implements Injector {
 
     private final Map<String, Arguments> registered;
 
-    private static Map<String, Object> singleton;
+    private final Map<String, Object> singleton;
 
-    private ArrayList<String> creating;
+    private final ArrayList<String> creating;
 
-    public Container() {
+    Container() {
         this.registered = new HashMap<>();
         this.singleton = new HashMap<>();
         this.creating = new ArrayList<>();
