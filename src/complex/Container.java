@@ -18,7 +18,7 @@ public class Container implements Injector {
     private final ArrayList<Class<?>> creating;
 
 
-    public Container() {
+    Container() {
         this.registered = new HashMap<>();
         this.singleton = new HashMap<>();
         this.creating = new ArrayList<>();
