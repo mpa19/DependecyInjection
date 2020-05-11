@@ -11,7 +11,7 @@ public class Container implements Injector {
 
     private enum ObjectType {CONSTANT, FACTORY, SINGLETON}
 
-    private final Map<String, Arguments> registered;
+    private final Map<String, Arguments<ObjectType, Object, Object>> registered;
 
     private final Map<String, Object> singleton;
 
@@ -27,21 +27,21 @@ public class Container implements Injector {
     public void registerConstant(String name, Object value) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments(ObjectType.CONSTANT, value));
+        registered.put(name, new Arguments<>(ObjectType.CONSTANT, value));
     }
 
     @Override
     public void registerFactory(String name, Factory creator, String... parameters) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments(ObjectType.FACTORY, creator, parameters));
+        registered.put(name, new Arguments<>(ObjectType.FACTORY, creator, parameters));
     }
 
     @Override
     public void registerSingleton(String name, Factory creator, String... parameters) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments(ObjectType.SINGLETON, creator, parameters));
+        registered.put(name, new Arguments<>(ObjectType.SINGLETON, creator, parameters));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class Container implements Injector {
         throw new DependencyException(new DependencyException("The ObjectType was neither FACTORY, CONSTANT or SINGLETON."));
     }
 
-    private Object[] funAux(Arguments value, String name) throws DependencyException {
+    private Object[] funAux(Arguments<ObjectType, Object, Object> value, String name) throws DependencyException {
         String[] values = (String[]) value.getDependencies();
 
         Object[] params = new Object[values.length];

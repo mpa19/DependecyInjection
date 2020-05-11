@@ -18,10 +18,7 @@ public class Arguments<A, B, C> {
         this.dependencies = null;
     }
 
-    public A getType() {
-        return type;
-
-    }
+    public A getType() { return type; }
 
     public B getFactoryVal() {
         return factoryVal;

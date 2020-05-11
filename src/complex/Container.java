@@ -11,7 +11,7 @@ public class Container implements Injector {
 
     private enum ObjectType {CONSTANT, FACTORY, SINGLETON}
 
-    private final Map<Class<?>, Arguments> registered;
+    private final Map<Class<?>, Arguments<ObjectType, Object, Object>> registered;
 
     private final Map<Class<?>, Object> singleton;
 
@@ -24,28 +24,25 @@ public class Container implements Injector {
         this.creating = new ArrayList<>();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <E> void registerConstant(Class<E> name, E value) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments(ObjectType.CONSTANT, value));
+        registered.put(name, new Arguments<>(ObjectType.CONSTANT, value, null));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <E> void registerFactory(Class<E> name, Factory<? extends E> creator, Class<?>... parameters) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments(ObjectType.FACTORY, creator, parameters));
+        registered.put(name, new Arguments<>(ObjectType.FACTORY, creator, parameters));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <E> void registerSingleton(Class<E> name, Factory<? extends E> creator, Class<?>... parameters) throws DependencyException {
         if(registered.containsKey(name))
             throw new DependencyException(new DependencyException("The key already exists in the map."));
-        registered.put(name, new Arguments(ObjectType.SINGLETON, creator, parameters));
+        registered.put(name, new Arguments<>(ObjectType.SINGLETON, creator, parameters));
     }
 
     @SuppressWarnings("unchecked")
@@ -77,14 +74,13 @@ public class Container implements Injector {
         throw new DependencyException(new common.DependencyException("The ObjectType was neither FACTORY, CONSTANT or SINGLETON."));
     }
 
-    @SuppressWarnings("unchecked")
-    private Object[] funAux(Arguments value, Class name) throws DependencyException {
-        Class[] values = (Class[]) value.getDependencies();
+    private Object[] funAux(Arguments<ObjectType, Object, Object> value, Class<?> name) throws DependencyException {
+        Class<?>[] values = (Class<?>[]) value.getDependencies();
 
         Object[] params = new Object[values.length];
         int cont = 0;
 
-        for(Class x : values){
+        for(Class<?> x : values){
             params[cont] = this.getObject(x);
             cont++;
         }
