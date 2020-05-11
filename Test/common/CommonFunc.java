@@ -1,4 +1,4 @@
-package Common;
+package common;
 
 import implementations.ImplementationC1;
 import implementations.ImplementationD1;
@@ -8,7 +8,7 @@ import interfaces.InterfaceD;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class Comun {
+public class CommonFunc {
 
     public void testD(InterfaceD d) {
         ImplementationD1 d1 = (ImplementationD1) d;
